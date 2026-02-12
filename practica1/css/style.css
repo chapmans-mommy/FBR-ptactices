@@ -35,7 +35,7 @@ body {
 .card__description {
   margin: 0 0 20px 0;
   line-height: 1.5;
-  letter-spacing: 0.1dvh;
+  letter-spacing: 0.1vh;
   color: #555;
 }
 .card__button {
