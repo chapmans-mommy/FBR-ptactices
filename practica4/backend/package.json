@@ -1,0 +1,15 @@
+{
+    "name": "kitten-store-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js",
+      "dev": "node --watch app.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "nanoid": "^3.3.6",
+      "cors": "^2.8.5"
+    }
+  }
