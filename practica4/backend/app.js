@@ -4,22 +4,113 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-//списочек милашек
+//списочек милашек с фотографиями и рейтингом
 let products = [
-    { id: nanoid(6), name: 'Бонифация', category: 'Коты', description: 'Пушистая и ласковая кошка, 5 лет', price: 12000, stock: 1 },
-    { id: nanoid(6), name: 'Мишка', category: 'Коты', description: 'Независимый самодостаточный кот, 9 лет', price: 15000, stock: 1 },
-    { id: nanoid(6), name: 'Нунби', category: 'Коты', description: 'Тактильная малышка, 8 месяцев', price: 13000, stock: 1 },
-    { id: nanoid(6), name: 'Тихон', category: 'Коты', description: 'Таинственный и умный, 6 лет', price: 14000, stock: 1 },
-    { id: nanoid(6), name: 'Антон', category: 'Коты', description: 'Игривый и упрямый кот, 4 года', price: 16000, stock: 1 },
-    { id: nanoid(6), name: 'София', category: 'Собаки', description: 'Умная исполнительная собака, 3 года', price: 18000, stock: 1 },
-    { id: nanoid(6), name: 'Фифа', category: 'Собаки', description: 'Активный щенок, 7 месяцев', price: 20000, stock: 1 },
-    { id: nanoid(6), name: 'Алтай', category: 'Собаки', description: 'Спокойный преданный пес, 5 лет', price: 25000, stock: 1 },
-    { id: nanoid(6), name: 'Хомячки джунгарики', category: 'Хомяки', description: 'Маленькие милые ребята', price: 22000, stock: 9 },
-    { id: nanoid(6), name: 'Мышки', category: 'Мыши', description: 'Мышки разных окрасов', price: 30000, stock: 5 }
+    { 
+        id: nanoid(6), 
+        name: 'Бонифация', 
+        category: 'Коты', 
+        description: 'Пушистая и ласковая кошка, 5 лет', 
+        price: 12000, 
+        stock: 1,
+        rating: 4.8,
+        image: '/images/боня.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Мишка', 
+        category: 'Коты', 
+        description: 'Независимый самодостаточный кот, 9 лет', 
+        price: 15000, 
+        stock: 1,
+        rating: 4.9,
+        image: '/images/мишка.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Нунби', 
+        category: 'Коты', 
+        description: 'Тактильная малышка, 8 месяцев', 
+        price: 13000, 
+        stock: 1,
+        rating: 5.0,
+        image: '/images/нунби.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Тихон', 
+        category: 'Коты', 
+        description: 'Таинственный и умный, 6 лет', 
+        price: 14000, 
+        stock: 1,
+        rating: 4.7,
+        image: '/images/тихон.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Антон', 
+        category: 'Коты', 
+        description: 'Игривый и упрямый кот, 4 года', 
+        price: 16000, 
+        stock: 1,
+        rating: 4.8,
+        image: '/images/антон.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'София', 
+        category: 'Собаки', 
+        description: 'Умная исполнительная собака, 3 года', 
+        price: 18000, 
+        stock: 1,
+        rating: 4.9,
+        image: '/images/софия.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Фифа', 
+        category: 'Собаки', 
+        description: 'Активный щенок, 7 месяцев', 
+        price: 20000, 
+        stock: 1,
+        rating: 4.8,
+        image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Алтай', 
+        category: 'Собаки', 
+        description: 'Спокойный преданный пес, 5 лет', 
+        price: 25000, 
+        stock: 1,
+        rating: 5.0,
+        image: '/images/алтай.jpg'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Хомячки джунгарики', 
+        category: 'Хомяки', 
+        description: 'Маленькие милые ребята', 
+        price: 22000, 
+        stock: 9,
+        rating: 4.9,
+        image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200'
+    },
+    { 
+        id: nanoid(6), 
+        name: 'Мышки', 
+        category: 'Мыши', 
+        description: 'Мышки разных окрасов', 
+        price: 30000, 
+        stock: 5,
+        rating: 4.7,
+        image: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=200'
+    }
 ];
 
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3001' }));
+app.use('/images', express.static('public/images'));
 
 app.use((req, res, next) => {
     res.on('finish', () => {
@@ -40,9 +131,9 @@ function findProductOr404(id, res) {
     return product;
 }
 
-// POST
+// POST с рейтингом и фото
 app.post('/api/products', (req, res) => {
-    const { name, category, description, price, stock } = req.body;
+    const { name, category, description, price, stock, rating, image } = req.body;
     
     const newProduct = {
         id: nanoid(6),
@@ -50,7 +141,9 @@ app.post('/api/products', (req, res) => {
         category: category.trim(),
         description: description.trim(),
         price: Number(price),
-        stock: Number(stock)
+        stock: Number(stock),
+        rating: rating ? Number(rating) : 5.0,
+        image: image || 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=200'
     };
     
     products.push(newProduct);
@@ -70,19 +163,21 @@ app.get('/api/products/:id', (req, res) => {
     res.json(product);
 });
 
-// PATCH айдишник
+// PATCH с рейтингом и фото
 app.patch('/api/products/:id', (req, res) => {
     const id = req.params.id;
     const product = findProductOr404(id, res);
     if (!product) return;
     
-    const { name, category, description, price, stock } = req.body;
+    const { name, category, description, price, stock, rating, image } = req.body;
     
     if (name !== undefined) product.name = name.trim();
     if (category !== undefined) product.category = category.trim();
     if (description !== undefined) product.description = description.trim();
     if (price !== undefined) product.price = Number(price);
     if (stock !== undefined) product.stock = Number(stock);
+    if (rating !== undefined) product.rating = Number(rating);
+    if (image !== undefined) product.image = image;
     
     res.json(product);
 });
@@ -96,7 +191,6 @@ app.delete('/api/products/:id', (req, res) => {
     products = products.filter(p => p.id != id);
     res.status(204).send();
 });
-
 
 app.listen(port, () => {
     console.log(`Сервер запущен на http://localhost:${port}`);

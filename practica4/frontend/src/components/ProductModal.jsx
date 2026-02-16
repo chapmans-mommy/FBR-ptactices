@@ -6,6 +6,8 @@ export default function ProductModal({ open, mode, initialProduct, onClose, onSu
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [stock, setStock] = useState("");
+    const [rating, setRating] = useState("");
+    const [image, setImage] = useState("");
 
     useEffect(() => {
         if (!open) return;
@@ -15,6 +17,8 @@ export default function ProductModal({ open, mode, initialProduct, onClose, onSu
         setDescription(initialProduct?.description ?? "");
         setPrice(initialProduct?.price != null ? String(initialProduct.price) : "");
         setStock(initialProduct?.stock != null ? String(initialProduct.stock) : "");
+        setRating(initialProduct?.rating != null ? String(initialProduct.rating) : "5.0");
+        setImage(initialProduct?.image ?? "");
     }, [open, initialProduct]);
 
     if (!open) return null;
@@ -29,6 +33,8 @@ export default function ProductModal({ open, mode, initialProduct, onClose, onSu
         const trimmedDescription = description.trim();
         const parsedPrice = Number(price);
         const parsedStock = Number(stock);
+        const parsedRating = Number(rating);
+        const trimmedImage = image.trim();
         
         if (!trimmedName) {
             alert("Введите название (имя)");
@@ -54,6 +60,11 @@ export default function ProductModal({ open, mode, initialProduct, onClose, onSu
             alert("Введите корректное количество");
             return;
         }
+
+        if (!Number.isFinite(parsedRating) || parsedRating < 0 || parsedRating > 5) {
+            alert("Введите корректный рейтинг (от 0 до 5)");
+            return;
+        }
         
         onSubmit({
             id: initialProduct?.id,
@@ -61,7 +72,9 @@ export default function ProductModal({ open, mode, initialProduct, onClose, onSu
             category: trimmedCategory,
             description: trimmedDescription,
             price: parsedPrice,
-            stock: parsedStock
+            stock: parsedStock,
+            rating: parsedRating,
+            image: trimmedImage || undefined
         });
     };
 
@@ -126,6 +139,27 @@ export default function ProductModal({ open, mode, initialProduct, onClose, onSu
                             onChange={(e) => setStock(e.target.value)} 
                             placeholder="..." 
                             inputMode="numeric" 
+                        />
+                    </label>
+
+                    <label className="label">
+                        Рейтинг (от 0 до 5)
+                        <input 
+                            className="input" 
+                            value={rating} 
+                            onChange={(e) => setRating(e.target.value)} 
+                            placeholder="..." 
+                            inputMode="decimal" 
+                        />
+                    </label>
+
+                    <label className="label">
+                        Ссылка на фото
+                        <input 
+                            className="input" 
+                            value={image} 
+                            onChange={(e) => setImage(e.target.value)} 
+                            placeholder="/images/bonifacia.jpg или https://..." 
                         />
                     </label>
                     

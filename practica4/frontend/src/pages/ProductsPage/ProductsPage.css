@@ -93,6 +93,18 @@
   gap: 12px;
   padding: 12px;
 }
+.productRow .productImage {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.productRow .productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .productMain {
   display: flex;
@@ -123,6 +135,20 @@
   width: 100%;
   opacity: 0.7;
   font-size: 13px;
+}
+.productMain .productRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+.productMain .productRating .stars {
+  color: #ffb400;
+  letter-spacing: 2px;
+}
+.productMain .productRating .ratingValue {
+  opacity: 0.7;
+  font-size: 12px;
 }
 
 .productActions {
