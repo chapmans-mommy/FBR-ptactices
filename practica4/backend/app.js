@@ -74,7 +74,7 @@ let products = [
         price: 20000, 
         stock: 1,
         rating: 4.8,
-        image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200'
+        image: '/images/фифа.jpg'
     },
     { 
         id: nanoid(6), 
@@ -94,7 +94,7 @@ let products = [
         price: 22000, 
         stock: 9,
         rating: 4.9,
-        image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200'
+        image: '/images/хомяки.jpg'
     },
     { 
         id: nanoid(6), 
@@ -104,7 +104,7 @@ let products = [
         price: 30000, 
         stock: 5,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=200'
+        image: '/images/мышки.jpg'
     }
 ];
 
@@ -131,7 +131,7 @@ function findProductOr404(id, res) {
     return product;
 }
 
-// POST с рейтингом и фото
+// POST 
 app.post('/api/products', (req, res) => {
     const { name, category, description, price, stock, rating, image } = req.body;
     
