@@ -68,16 +68,6 @@ let products = [
     },
     { 
         id: nanoid(6), 
-        name: 'Фифа', 
-        category: 'Собаки', 
-        description: 'Активный щенок, 7 месяцев', 
-        price: 20000, 
-        stock: 1,
-        rating: 4.8,
-        image: '/images/фифа.jpg'
-    },
-    { 
-        id: nanoid(6), 
         name: 'Алтай', 
         category: 'Собаки', 
         description: 'Спокойный преданный пес, 5 лет', 
@@ -86,26 +76,6 @@ let products = [
         rating: 5.0,
         image: '/images/алтай.jpg'
     },
-    { 
-        id: nanoid(6), 
-        name: 'Хомячки джунгарики', 
-        category: 'Хомяки', 
-        description: 'Маленькие милые ребята', 
-        price: 22000, 
-        stock: 9,
-        rating: 4.9,
-        image: '/images/хомяки.jpg'
-    },
-    { 
-        id: nanoid(6), 
-        name: 'Мышки', 
-        category: 'Мыши', 
-        description: 'Мышки разных окрасов', 
-        price: 30000, 
-        stock: 5,
-        rating: 4.7,
-        image: '/images/мышки.jpg'
-    }
 ];
 
 app.use(express.json());
