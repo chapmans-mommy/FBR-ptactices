@@ -2,14 +2,13 @@ const express = require('express');
 const { nanoid } = require('nanoid');
 const cors = require('cors');
 
-// ========== ПОДКЛЮЧАЕМ SWAGGER ==========
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 const port = 3000;
 
-// ========== НАЧАЛЬНЫЕ ДАННЫЕ ==========
+//списочек милашек с фотографиями и рейтингом
 let products = [
     { 
         id: nanoid(6), 
@@ -19,7 +18,7 @@ let products = [
         price: 12000, 
         stock: 1,
         rating: 4.8,
-        image: '/images/bonya.jpg'
+        image: '/images/боня.jpg'
     },
     { 
         id: nanoid(6), 
@@ -29,7 +28,7 @@ let products = [
         price: 15000, 
         stock: 1,
         rating: 4.9,
-        image: '/images/mishka.jpg'
+        image: '/images/мишка.jpg'
     },
     { 
         id: nanoid(6), 
@@ -39,7 +38,7 @@ let products = [
         price: 13000, 
         stock: 1,
         rating: 5.0,
-        image: '/images/nunbi.jpg'
+        image: '/images/нунби.jpg'
     },
     { 
         id: nanoid(6), 
@@ -49,7 +48,7 @@ let products = [
         price: 14000, 
         stock: 1,
         rating: 4.7,
-        image: '/images/tihon.jpg'
+        image: '/images/тихон.jpg'
     },
     { 
         id: nanoid(6), 
@@ -59,7 +58,7 @@ let products = [
         price: 16000, 
         stock: 1,
         rating: 4.8,
-        image: '/images/anton.jpg'
+        image: '/images/антон.jpg'
     },
     { 
         id: nanoid(6), 
@@ -69,17 +68,7 @@ let products = [
         price: 18000, 
         stock: 1,
         rating: 4.9,
-        image: '/images/sofiya.jpg'
-    },
-    { 
-        id: nanoid(6), 
-        name: 'Фифа', 
-        category: 'Собаки', 
-        description: 'Активный щенок, 7 месяцев', 
-        price: 20000, 
-        stock: 1,
-        rating: 4.8,
-        image: '/images/fifa.jpg'
+        image: '/images/софия.jpg'
     },
     { 
         id: nanoid(6), 
@@ -89,38 +78,14 @@ let products = [
         price: 25000, 
         stock: 1,
         rating: 5.0,
-        image: '/images/altay.jpg'
+        image: '/images/алтай.jpg'
     },
-    { 
-        id: nanoid(6), 
-        name: 'Хомячки джунгарики', 
-        category: 'Хомяки', 
-        description: 'Маленькие милые ребята', 
-        price: 22000, 
-        stock: 9,
-        rating: 4.9,
-        image: '/images/homyaki.jpg'
-    },
-    { 
-        id: nanoid(6), 
-        name: 'Мышки', 
-        category: 'Мыши', 
-        description: 'Мышки разных окрасов', 
-        price: 30000, 
-        stock: 5,
-        rating: 4.7,
-        image: '/images/mishki.jpg'
-    }
 ];
 
-// Middleware
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3001' }));
-
-// Раздача статических файлов (фото)
 app.use('/images', express.static('public/images'));
 
-// Логирование запросов
 app.use((req, res, next) => {
     res.on('finish', () => {
         console.log(`[${new Date().toISOString()}] [${req.method}] ${res.statusCode} ${req.path}`);
@@ -138,7 +103,7 @@ const swaggerOptions = {
         info: {
             title: 'API Питомника',
             version: '1.0.0',
-            description: 'API для управления питомцами (кошки, собаки, хомяки, мыши)',
+            description: 'API для управления питомцами (кошки, собаки)',
             contact: {
                 name: 'Разработчик',
                 email: 'your@email.com'
@@ -166,7 +131,7 @@ const swaggerOptions = {
                         },
                         category: {
                             type: 'string',
-                            description: 'Категория (Коты/Собаки/Хомяки/Мыши)'
+                            description: 'Категория (Коты/Собаки)'
                         },
                         description: {
                             type: 'string',
@@ -197,7 +162,7 @@ const swaggerOptions = {
                         price: 12000,
                         stock: 1,
                         rating: 4.8,
-                        image: '/images/bonya.jpg'
+                        image: '/images/боня.jpg'
                     }
                 }
             }
@@ -209,26 +174,23 @@ const swaggerOptions = {
             }
         ]
     },
-    // Путь к файлам с JSDoc-комментариями
     apis: ['./app.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
-// Подключаем Swagger UI по адресу /api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ==========
 function findProductOr404(id, res) {
     const product = products.find(p => p.id == id);
     if (!product) {
-        res.status(404).json({ error: "Питомец не найден" });
+        res.status(404).json({ error: "Product not found" });
         return null;
     }
     return product;
 }
 
-// ========== CRUD МАРШРУТЫ С JSDoc КОММЕНТАРИЯМИ ==========
+// ========== CRUD МАРШРУТЫ ==========
 
 /**
  * @swagger
@@ -438,18 +400,12 @@ app.patch('/api/products/:id', (req, res) => {
 app.delete('/api/products/:id', (req, res) => {
     const id = req.params.id;
     const exists = products.some(p => p.id == id);
-    if (!exists) return res.status(404).json({ error: "Питомец не найден" });
+    if (!exists) return res.status(404).json({ error: "Product not found" });
     
     products = products.filter(p => p.id != id);
     res.status(204).send();
 });
 
-// 404
-app.use((req, res) => {
-    res.status(404).json({ error: "Not found" });
-});
-
-// Запуск сервера
 app.listen(port, () => {
     console.log(`Сервер запущен на http://localhost:${port}`);
     console.log(`Swagger документация: http://localhost:${port}/api-docs`);
