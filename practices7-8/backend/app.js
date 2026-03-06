@@ -1,8 +1,8 @@
 const express = require('express');
 const { nanoid } = require('nanoid');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt'); // для хеширования
+const jwt = require('jsonwebtoken'); // для JWT токенов
 
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -20,7 +20,6 @@ let products = [];
 app.use(express.json());
 app.use(cors({ origin: '*' }));
 
-//логирование
 app.use((req, res, next) => {
     res.on('finish', () => {
         console.log(`[${new Date().toISOString()}] [${req.method}] ${res.statusCode} ${req.path}`);
@@ -31,7 +30,7 @@ app.use((req, res, next) => {
 const SALT_ROUNDS = 10;
 
 async function hashPassword(password) {
-    return bcrypt.hash(password, SALT_ROUNDS);
+    return bcrypt.hash(password, SALT_ROUNDS); //соль
 }
 
 async function verifyPassword(password, hash) {
@@ -258,7 +257,7 @@ app.post('/api/auth/login', async (req, res) => {
         return res.status(401).json({ error: "Неверный email или пароль" });
     }
 
-    //JWT ТОКЕН
+    //JWT ТОКЕН создание
     const accessToken = jwt.sign(
         {
             sub: user.id,
