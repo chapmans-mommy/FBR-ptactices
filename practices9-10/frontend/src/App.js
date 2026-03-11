@@ -44,6 +44,8 @@ function App() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [productForm, setProductForm] = useState({ title: '', category: '', description: '', price: '' });
+  const [viewingProduct, setViewingProduct] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('accessToken')) {
@@ -156,6 +158,16 @@ function App() {
   const cancelEdit = () => {
     setEditingProduct(null);
     setProductForm({ title: '', category: '', description: '', price: '' });
+  };
+
+  const viewProduct = (product) => {
+    setViewingProduct(product);
+    setShowViewModal(true);
+  };
+  
+  const closeViewModal = () => {
+    setShowViewModal(false);
+    setViewingProduct(null);
   };
 
   return (
@@ -276,21 +288,60 @@ function App() {
 
           {/* Список товаров */}
           <div className="products-list">
-            {products.map(p => (
-              <div key={p.id} className="product-card">
-                <div className="product-header">
-                  <span className="product-id">#{p.id}</span>
-                  <h4>{p.title}</h4>
-                </div>
-                <p><strong>Категория:</strong> {p.category}</p>
-                <p><strong>Описание:</strong> {p.description}</p>
-                <p><strong>Цена:</strong> {p.price} руб.</p>
-                <div className="card-buttons">
-                  <button onClick={() => startEdit(p)} className="edit-btn">Редактировать</button>
-                  <button onClick={() => deleteProduct(p.id)} className="delete-btn">Удалить</button>
-                </div>
+          {products.map(p => (
+            <div key={p.id} className="product-card">
+              <div className="product-header">
+                <span className="product-id">#{p.id}</span>
+                <h4 onClick={() => viewProduct(p)} style={{ cursor: 'pointer' }}>{p.title}</h4>
               </div>
-            ))}
+              <p onClick={() => viewProduct(p)} style={{ cursor: 'pointer' }}>
+                <strong>Категория:</strong> {p.category}
+              </p>
+              <p onClick={() => viewProduct(p)} style={{ cursor: 'pointer' }}>
+                <strong>Цена:</strong> {p.price} руб.
+              </p>
+              <div className="card-buttons">
+                <button onClick={() => startEdit(p)} className="edit-btn">Редактировать</button>
+                <button onClick={() => deleteProduct(p.id)} className="delete-btn">Удалить</button>
+              </div>
+            </div>
+          ))}
+          </div>
+        </div>
+      )}
+      {/* Модальное окно просмотра товара */}
+      {showViewModal && viewingProduct && (
+        <div className="modal-overlay" onClick={closeViewModal}>
+          <div className="view-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Просмотр товара</h3>
+              <button className="close-btn" onClick={closeViewModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="view-field">
+                <strong>ID:</strong>
+                <span className="view-id">{viewingProduct.id}</span>
+              </div>
+              <div className="view-field">
+                <strong>Название:</strong>
+                <span>{viewingProduct.title}</span>
+              </div>
+              <div className="view-field">
+                <strong>Категория:</strong>
+                <span>{viewingProduct.category}</span>
+              </div>
+              <div className="view-field">
+                <strong>Описание:</strong>
+                <span className="view-description">{viewingProduct.description}</span>
+              </div>
+              <div className="view-field">
+                <strong>Цена:</strong>
+                <span className="view-price">{viewingProduct.price} ₽</span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button onClick={closeViewModal}>Закрыть</button>
+            </div>
           </div>
         </div>
       )}
