@@ -13,7 +13,7 @@ const port = 3000;
 //JWT
 const ACCESS_SECRET = 'access-secret-key-change-this';
 const REFRESH_SECRET = 'refresh-secret-key-change-this';
-const ACCESS_EXPIRES_IN = '15m';
+const ACCESS_EXPIRES_IN = '15s';
 const REFRESH_EXPIRES_IN = '7d';
 
 // Хранилища
