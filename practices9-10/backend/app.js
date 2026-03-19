@@ -533,7 +533,7 @@ app.delete('/api/users/:id', authMiddleware, roleMiddleware(['admin']), (req, re
  *         description: Доступ запрещён
  */
 app.post('/api/products', authMiddleware, roleMiddleware(['seller', 'admin']), (req, res) => {
-    const { title, category, description, price } = req.body;
+    const { title, category, description, price, imageUrl } = req.body;
 
     if (!title || !category || !description || !price) {
         return res.status(400).json({ error: "Все поля обязательны" });
@@ -544,7 +544,8 @@ app.post('/api/products', authMiddleware, roleMiddleware(['seller', 'admin']), (
         title: title.trim(),
         category: category.trim(),
         description: description.trim(),
-        price: Number(price)
+        price: Number(price),
+        imageUrl: imageUrl || 'https://via.placeholder.com/300x200?text=Нет+фото'
     };
 
     products.push(newProduct);
@@ -622,7 +623,7 @@ app.put('/api/products/:id', authMiddleware, roleMiddleware(['seller', 'admin'])
     const product = findProductOr404(id, res);
     if (!product) return;
 
-    const { title, category, description, price } = req.body;
+    const { title, category, description, price, imageUrl } = req.body;
 
     if (!title || !category || !description || !price) {
         return res.status(400).json({ error: "Все поля обязательны" });
@@ -632,6 +633,7 @@ app.put('/api/products/:id', authMiddleware, roleMiddleware(['seller', 'admin'])
     product.category = category.trim();
     product.description = description.trim();
     product.price = Number(price);
+    if (imageUrl) product.imageUrl = imageUrl;
 
     res.json(product);
 });

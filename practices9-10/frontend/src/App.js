@@ -45,7 +45,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
-  const [productForm, setProductForm] = useState({ title: '', category: '', description: '', price: '' });
+  const [productForm, setProductForm] = useState({ title: '', category: '', description: '', price: '', imageUrl: '' });
   const [userForm, setUserForm] = useState({ email: '', firstName: '', lastName: '', role: '' });
   const [viewingProduct, setViewingProduct] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -404,6 +404,7 @@ function App() {
                 <input name="category" placeholder="Категория" value={productForm.category} onChange={handleProductChange} required />
                 <textarea name="description" placeholder="Описание" value={productForm.description} onChange={handleProductChange} required rows="3" />
                 <input name="price" type="number" placeholder="Цена" value={productForm.price} onChange={handleProductChange} required />
+                <input name="imageUrl" placeholder="Ссылка на фото (URL)"value={productForm.imageUrl} onChange={handleProductChange}/>
                 <div className="form-buttons">
                   <button type="submit">{editingProduct ? 'Сохранить' : 'Создать'}</button>
                   {editingProduct && (
@@ -418,10 +419,17 @@ function App() {
           <div className="products-list">
             {products.map(p => (
               <div key={p.id} className="product-card">
+                {p.imageUrl && (
+                  <div className="product-image">
+                    <img src={p.imageUrl} alt={p.title} />
+                  </div>
+                )}
+                
                 <div className="product-header">
                   <span className="product-id">#{p.id}</span>
                   <h4 onClick={() => viewProduct(p)} style={{ cursor: 'pointer' }}>{p.title}</h4>
                 </div>
+  
                 <p onClick={() => viewProduct(p)} style={{ cursor: 'pointer' }}>
                   <strong>Категория:</strong> {p.category}
                 </p>
@@ -459,6 +467,11 @@ function App() {
                 <strong>Название:</strong>
                 <span>{viewingProduct.title}</span>
               </div>
+              {viewingProduct.imageUrl && (
+                <div className="view-image">
+                  <img src={viewingProduct.imageUrl} alt={viewingProduct.title} />
+                </div>
+              )}
               <div className="view-field">
                 <strong>Категория:</strong>
                 <span>{viewingProduct.category}</span>
