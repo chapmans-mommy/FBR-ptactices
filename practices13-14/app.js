@@ -12,41 +12,62 @@ let currentEditIndex = null; //for editing
 
 // Загрузка заметок из localStorage
 function loadNotes() {
-    const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     
+    // Для старых заметок добавляем поле color, если его нет
     notes = notes.map(note => {
         if (typeof note === 'string') {
             return { text: note, color: null };
         }
         return note;
     });
-
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    
     if (notes.length === 0) {
         notesList.innerHTML = '<div class="empty-message">there`s no notes yet</div>';
         return;
     }
     
-    
     notesList.innerHTML = notes.map((note, index) => `
-        <div class="note-item">
-            <span class="note-text">${escapeHtml(note)}</span>
+    <div class="note-item">
+        <div class="note-header">
+            <div class="mac-buttons">
+                <div class="mac-circle green ${note.color === 'green' ? '' : 'empty'}" data-index="${index}" data-color="green"></div>
+                <div class="mac-circle yellow ${note.color === 'yellow' ? '' : 'empty'}" data-index="${index}" data-color="yellow"></div>
+                <div class="mac-circle red ${note.color === 'red' ? '' : 'empty'}" data-index="${index}" data-color="red"></div>
+            </div>
+        </div>
+        <div class="note-content">
+            <span class="note-text">${escapeHtml(note.text)}</span>
             <div class="note-buttons">
                 <button class="edit-btn" data-index="${index}">edit</button>
                 <button class="delete-btn" data-index="${index}">delete</button>
             </div>
         </div>
+    </div>
     `).join('');
     
+    // Обработчики для кружочков
+    document.querySelectorAll('.mac-circle').forEach(circle => {
+        circle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(circle.dataset.index);
+            const color = circle.dataset.color;
+            setNoteColor(index, color);
+        });
+    });
+    
+    // Обработчики для кнопок
     document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const index = parseInt(btn.dataset.index);
             openEditModal(index);
         });
     });
-
-    // Добавляем обработчики для кнопок удаления
+    
     document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
             const index = parseInt(btn.dataset.index);
             deleteNote(index);
         });
@@ -58,7 +79,7 @@ function saveNote(text) {
     if (!text.trim()) return;
     
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    notes.push(text.trim());
+    notes.push({ text: text.trim(), color: null });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
     loadNotes();
 }
@@ -75,7 +96,9 @@ function deleteNote(index) {
 function openEditModal(index) {
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     currentEditIndex = index;
-    editInput.value = notes[index];
+    // Получаем текст из заметки (может быть строка или объект)
+    const noteText = typeof notes[index] === 'string' ? notes[index] : notes[index].text;
+    editInput.value = noteText;
     editModal.style.display = 'flex';
 }
 
@@ -92,8 +115,15 @@ function saveEdit() {
         return;
     }
     
-    const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    notes[currentEditIndex] = newText;
+    let notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    
+    // Сохраняем текст, сохраняя цвет
+    if (typeof notes[currentEditIndex] === 'string') {
+        notes[currentEditIndex] = { text: newText, color: null };
+    } else {
+        notes[currentEditIndex].text = newText;
+    }
+    
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
     
     closeEditModal();
@@ -116,6 +146,26 @@ function updateStatus() {
         statusDiv.textContent = 'offline';
         statusDiv.className = 'status offline';
     }
+}
+
+// Установка цвета заметки
+function setNoteColor(index, color) {
+    let notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    
+    // Если заметка в старом формате (строка), преобразуем
+    if (typeof notes[index] === 'string') {
+        notes[index] = { text: notes[index], color: null };
+    }
+    
+    // Если нажали на уже выбранный цвет — сбрасываем (null)
+    if (notes[index].color === color) {
+        notes[index].color = null;
+    } else {
+        notes[index].color = color;
+    }
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    loadNotes(); // обновляем отображение
 }
 
 window.addEventListener('online', updateStatus);

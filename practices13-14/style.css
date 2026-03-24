@@ -20,6 +20,7 @@ body {
     max-width: 550px;
     margin: 0;
 }
+
 /* ========== ЗАГОЛОВОК ========== */
 h1 {
     text-align: center;
@@ -27,13 +28,6 @@ h1 {
     margin-bottom: 20px;
     font-size: 2rem;
     letter-spacing: 0.5dvh;
-}
-
-.subtitle {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 0.9rem;
 }
 
 /* ========== ФОРМА ========== */
@@ -61,7 +55,6 @@ h1 {
     padding: 10px 20px;
     background: rgb(243, 242, 242);
     color: rgb(177, 177, 177);
-    text-transform: inherit;
     border-color: #c9c9c9;
     border-radius: 10px;
     cursor: pointer;
@@ -82,15 +75,26 @@ h1 {
     gap: 12px;
 }
 
+.note-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 44px;
+}
+
+/* ========== КАРТОЧКА ЗАМЕТКИ (ВЕРТИКАЛЬНАЯ) ========== */
 .note-item {
     background: #eff0f092;
     padding: 16px;
     border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     transition: all 0.3s;
     border: 1px solid #9a9a9a;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
 }
 
 .note-item:hover {
@@ -99,30 +103,112 @@ h1 {
     border-color: #696a6e;
 }
 
-.note-text {
-    flex: 1;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    letter-spacing: 0.1dvh;
+/* ========== ВЕРХНЯЯ СТРОКА (кружочки слева, кнопки справа) ========== */
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* ========== MAC-КРУЖОЧКИ ========== */
+.mac-buttons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: -6px;
+
+}
+
+.mac-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.mac-circle.green {
+    background-color: #28a74634;
+    border-color: #1e7e3444;
+}
+
+.mac-circle.yellow {
+    background-color: #fad25b52;
+    border-color: #ffd04334;
+}
+
+.mac-circle.red {
+    background-color: #dc35464c;
+    border-color: #bd21313b;
+}
+
+.mac-circle.green.empty {
+    background-color: transparent;
+    border: 1px solid #28a7467f;
+}
+
+.mac-circle.yellow.empty {
+    background-color: transparent;
+    border: 1px solid #ffc10782;
+}
+
+.mac-circle.red.empty {
+    background-color: transparent;
+    border: 1px solid #dc354676;
+}
+
+.mac-circle:hover {
+    transform: scale(1.1);
+}
+
+/* ========== КНОПКИ (справа) ========== */
+.note-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.edit-btn, .delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
     font-size: 16px;
-    color: #333;
-    word-break: break-word;
-    padding-right: 15px;
+    transition: all 0.2s;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #bfc8f0 0%, #c1c1c1 100%);
+    color: white;
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #9aa4cf 0%, #c1c1c1 100%);
+    transform: scale(1.05);
 }
 
 .delete-btn {
     background: #8b8b8b9d;
     color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
 }
 
 .delete-btn:hover {
     background: #818181;
     transform: scale(1.05);
+}
+
+/* ========== ТЕКСТ ЗАМЕТКИ ========== */
+.note-text {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    letter-spacing: 0.1dvh;
+    font-size: 16px;
+    color: #333;
+    word-break: break-word;
+    padding: 4px 0;
+    line-height: 1.4;
 }
 
 /* ========== ПУСТОЕ СОСТОЯНИЕ ========== */
@@ -156,7 +242,7 @@ h1 {
     color: #721c24;
 }
 
-/* Модальное окно */
+/* ========== МОДАЛЬНОЕ ОКНО ========== */
 .modal {
     position: fixed;
     top: 0;
@@ -233,47 +319,17 @@ h1 {
 }
 
 .modal-buttons button:last-child {
-    background: #e0e0e0;
-    color: #333;
+    background: #c5c5c5;
+    color: #fffbfb;
 }
 
 .modal-buttons button:first-child:hover {
     background: linear-gradient(135deg, #9aa4cf 0%, #c1c1c1 100%);
-    color: white;
 }
 
 .modal-buttons button:last-child:hover {
-    background: #c7c7c7;
-    color: #333;
+    background: #b4b4b4;
 }
-
-/*editind buttons*/
-.note-buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.edit-btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-
-.edit-btn {
-    background: linear-gradient(135deg, #bfc8f0 0%, #c1c1c1 100%);
-    color: white;
-}
-
-.edit-btn:hover {
-    background: linear-gradient(135deg, #9aa4cf 0%, #c1c1c1 100%);
-    transform: scale(1.05);
-}
-
-
 
 /* ========== АДАПТИВНОСТЬ ========== */
 @media (max-width: 480px) {
