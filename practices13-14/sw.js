@@ -8,13 +8,13 @@ const ASSETS = [
     './style.css',      
     './app.js',
     './manifest.json',
-    '/icons/icons-icon-16-16.png',
-    '/icons/icons-icon-32-32.png',
-    '/icons/icons-icon-48-48.png',
-    '/icons/icons-icon-64-64.png',
-    '/icons/icons-icon-128-128.png',
-    '/icons/icons-icon-256-256.png',
-    '/icons/icons-icon-512-512.png'
+    './icons/icon-icons-16-16.png',
+    './icons/icon-icons-32-32.png',
+    './icons/icon-icons-48-48.png',
+    './icons/icon-icons-64-64.png',
+    './icons/icon-icons-128-128.png',
+    './icons/icon-icons-256-256.png',
+    './icons/icon-icons-512-512.png'
 ];
 
 // ========== СОБЫТИЕ INSTALL ==========

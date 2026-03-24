@@ -3,26 +3,47 @@ const form = document.getElementById('note-form');
 const input = document.getElementById('note-input');
 const notesList = document.getElementById('notes-list');
 const statusDiv = document.getElementById('status');
+const editModal = document.getElementById('edit-modal');
+const editInput = document.getElementById('edit-input');
 
 // ========== РАБОТА С localStorage ==========
 const STORAGE_KEY = 'my_notes';
+let currentEditIndex = null; //for editing
 
 // Загрузка заметок из localStorage
 function loadNotes() {
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     
+    notes = notes.map(note => {
+        if (typeof note === 'string') {
+            return { text: note, color: null };
+        }
+        return note;
+    });
+
     if (notes.length === 0) {
         notesList.innerHTML = '<div class="empty-message">there`s no notes yet</div>';
         return;
     }
     
+    
     notesList.innerHTML = notes.map((note, index) => `
         <div class="note-item">
             <span class="note-text">${escapeHtml(note)}</span>
-            <button class="delete-btn" data-index="${index}">delete</button>
+            <div class="note-buttons">
+                <button class="edit-btn" data-index="${index}">edit</button>
+                <button class="delete-btn" data-index="${index}">delete</button>
+            </div>
         </div>
     `).join('');
     
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            openEditModal(index);
+        });
+    });
+
     // Добавляем обработчики для кнопок удаления
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -47,6 +68,35 @@ function deleteNote(index) {
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     notes.splice(index, 1);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    loadNotes();
+}
+
+// ========== РЕДАКТИРОВАНИЕ ==========
+function openEditModal(index) {
+    const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    currentEditIndex = index;
+    editInput.value = notes[index];
+    editModal.style.display = 'flex';
+}
+
+function closeEditModal() {
+    editModal.style.display = 'none';
+    currentEditIndex = null;
+    editInput.value = '';
+}
+
+function saveEdit() {
+    const newText = editInput.value.trim();
+    if (!newText) {
+        alert('Введите текст заметки');
+        return;
+    }
+    
+    const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    notes[currentEditIndex] = newText;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    
+    closeEditModal();
     loadNotes();
 }
 

@@ -17,7 +17,8 @@ body {
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     width: 100%;
-    max-width: 600px;
+    max-width: 550px;
+    margin: 0;
 }
 /* ========== ЗАГОЛОВОК ========== */
 h1 {
@@ -58,9 +59,10 @@ h1 {
 
 #note-form button {
     padding: 10px 20px;
-    background: rgb(231, 231, 231);
-    color: rgb(72, 72, 72);
-    border-color: #777777;
+    background: rgb(243, 242, 242);
+    color: rgb(177, 177, 177);
+    text-transform: inherit;
+    border-color: #c9c9c9;
     border-radius: 10px;
     cursor: pointer;
     font-size: 20px;
@@ -153,6 +155,125 @@ h1 {
     background: #f8d7dac1;
     color: #721c24;
 }
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+#edit-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-buttons button:first-child {
+    background: linear-gradient(135deg, #bfc8f0 0%, #c1c1c1 100%);
+    color: white;
+}
+
+.modal-buttons button:last-child {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.modal-buttons button:first-child:hover {
+    background: linear-gradient(135deg, #9aa4cf 0%, #c1c1c1 100%);
+    color: white;
+}
+
+.modal-buttons button:last-child:hover {
+    background: #c7c7c7;
+    color: #333;
+}
+
+/*editind buttons*/
+.note-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.edit-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #bfc8f0 0%, #c1c1c1 100%);
+    color: white;
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #9aa4cf 0%, #c1c1c1 100%);
+    transform: scale(1.05);
+}
+
+
 
 /* ========== АДАПТИВНОСТЬ ========== */
 @media (max-width: 480px) {
