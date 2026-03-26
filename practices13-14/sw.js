@@ -1,23 +1,21 @@
-// ========== НАЗВАНИЕ КЭША ==========
-const CACHE_NAME = 'notes-cache-v2';  // v2 — добавили CSS
 
-// ========== РЕСУРСЫ ДЛЯ КЭШИРОВАНИЯ ==========
+const CACHE_NAME = 'notes-cache-v2';  
+
 const ASSETS = [
     '/',
-    './index.html',
-    './style.css',      
-    './app.js',
-    './manifest.json',
-    './icons/icon-icons-16-16.png',
-    './icons/icon-icons-32-32.png',
-    './icons/icon-icons-48-48.png',
-    './icons/icon-icons-64-64.png',
-    './icons/icon-icons-128-128.png',
-    './icons/icon-icons-256-256.png',
-    './icons/icon-icons-512-512.png'
+    './practices13-14/index.html',
+    './practices13-14/style.css',      
+    './practices13-14/app.js',
+    './practices13-14/manifest.json',
+    './practices13-14/icons/icon-icons-16-16.png',
+    './practices13-14/icons/icon-icons-32-32.png',
+    './practices13-14/icons/icon-icons-48-48.png',
+    './practices13-14/icons/icon-icons-64-64.png',
+    './practices13-14/icons/icon-icons-128-128.png',
+    './practices13-14/icons/icon-icons-256-256.png',
+    './practices13-14/icons/icon-icons-512-512.png'
 ];
 
-// ========== СОБЫТИЕ INSTALL ==========
 self.addEventListener('install', event => {
     console.log('[SW] Установка...');
     
@@ -34,7 +32,6 @@ self.addEventListener('install', event => {
     );
 });
 
-// ========== СОБЫТИЕ ACTIVATE ==========
 self.addEventListener('activate', event => {
     console.log('[SW] Активация...');
     
@@ -54,7 +51,7 @@ self.addEventListener('activate', event => {
     );
 });
 
-// ========== СОБЫТИЕ FETCH ==========
+
 self.addEventListener('fetch', event => {
     // Пропускаем запросы, которые не относятся к нашему приложению
     if (!event.request.url.includes('localhost') && !event.request.url.includes('127.0.0.1')) {

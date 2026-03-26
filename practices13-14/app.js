@@ -1,4 +1,4 @@
-// ========== ЭЛЕМЕНТЫ DOM ==========
+
 const form = document.getElementById('note-form');
 const input = document.getElementById('note-input');
 const notesList = document.getElementById('notes-list');
@@ -6,15 +6,14 @@ const statusDiv = document.getElementById('status');
 const editModal = document.getElementById('edit-modal');
 const editInput = document.getElementById('edit-input');
 
-// ========== РАБОТА С localStorage ==========
+
 const STORAGE_KEY = 'my_notes';
 let currentEditIndex = null; //for editing
 
 // Загрузка заметок из localStorage
 function loadNotes() {
     let notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    
-    // Для старых заметок добавляем поле color, если его нет
+
     notes = notes.map(note => {
         if (typeof note === 'string') {
             return { text: note, color: null };
@@ -92,11 +91,11 @@ function deleteNote(index) {
     loadNotes();
 }
 
-// ========== РЕДАКТИРОВАНИЕ ==========
+
 function openEditModal(index) {
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     currentEditIndex = index;
-    // Получаем текст из заметки (может быть строка или объект)
+
     const noteText = typeof notes[index] === 'string' ? notes[index] : notes[index].text;
     editInput.value = noteText;
     editModal.style.display = 'flex';
@@ -137,7 +136,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ========== ОТОБРАЖЕНИЕ СТАТУСА ОНЛАЙН/ОФЛАЙН ==========
+
 function updateStatus() {
     if (navigator.onLine) {
         statusDiv.textContent = 'online';
@@ -183,10 +182,9 @@ form.addEventListener('submit', (e) => {
     }
 });
 
-// ========== ПЕРВОНАЧАЛЬНАЯ ЗАГРУЗКА ==========
 loadNotes();
 
-// ========== РЕГИСТРАЦИЯ SERVICE WORKER ==========
+//SERVICE WORKER
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
         try {
