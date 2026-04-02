@@ -1,20 +1,22 @@
-
-const CACHE_NAME = 'notes-cache-v2';  
+const CACHE_NAME = 'app-shell-v1';
+const DYNAMIC_CACHE_NAME = 'dynamic-content-v1';
+ 
 
 const ASSETS = [
     '/',
-    './practices13-14/index.html',
-    './practices13-14/style.css',      
-    './practices13-14/app.js',
-    './practices13-14/manifest.json',
-    './practices13-14/icons/icon-icons-16-16.png',
-    './practices13-14/icons/icon-icons-32-32.png',
-    './practices13-14/icons/icon-icons-48-48.png',
-    './practices13-14/icons/icon-icons-64-64.png',
-    './practices13-14/icons/icon-icons-128-128.png',
-    './practices13-14/icons/icon-icons-256-256.png',
-    './practices13-14/icons/icon-icons-512-512.png'
+    './index.html',
+    './style.css',      
+    './app.js',
+    './manifest.json',
+    './icons/icon-icons-16-16.png',
+    './icons/icon-icons-32-32.png',
+    './icons/icon-icons-48-48.png',
+    './icons/icon-icons-64-64.png',
+    './icons/icon-icons-128-128.png',
+    './icons/icon-icons-256-256.png',
+    './icons/icon-icons-512-512.png'
 ];
+
 
 self.addEventListener('install', event => {
     console.log('[SW] Установка...');
@@ -52,12 +54,33 @@ self.addEventListener('activate', event => {
 });
 
 
+// FETCH — разные стратегии
 self.addEventListener('fetch', event => {
-    // Пропускаем запросы, которые не относятся к нашему приложению
-    if (!event.request.url.includes('localhost') && !event.request.url.includes('127.0.0.1')) {
+    const url = new URL(event.request.url);
+    
+    // Пропускаем запросы к другим источникам
+    if (url.origin !== location.origin) return;
+    
+    // Динамический контент (content/*) — Network First
+    if (url.pathname.startsWith('/content/')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(networkRes => {
+                    const resClone = networkRes.clone();
+                    caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+                        cache.put(event.request, resClone);
+                    });
+                    return networkRes;
+                })
+                .catch(() => {
+                    return caches.match(event.request)
+                        .then(cached => cached || caches.match('/content/home.html'));
+                })
+        );
         return;
     }
     
+    // Статика (App Shell) — Cache First
     event.respondWith(
         caches.match(event.request)
             .then(cachedResponse => {
@@ -69,18 +92,47 @@ self.addEventListener('fetch', event => {
                 console.log('[SW] Из сети:', event.request.url);
                 return fetch(event.request)
                     .then(response => {
-                        if (!response || response.status !== 200) {
-                            return response;
-                        }
-                        
-                        const responseToCache = response.clone();
-                        
+                        const resClone = response.clone();
                         caches.open(CACHE_NAME).then(cache => {
-                            cache.put(event.request, responseToCache);
+                            cache.put(event.request, resClone);
                         });
-                        
                         return response;
                     });
             })
+    );
+});
+
+// ========== PUSH-УВЕДОМЛЕНИЯ ==========
+self.addEventListener('push', (event) => {
+    let data = { title: '📝 Новая заметка!', body: '' };
+    
+    if (event.data) {
+        try {
+            data = event.data.json();
+        } catch (e) {
+            data.body = event.data.text();
+        }
+    }
+    
+    const options = {
+        body: data.body,
+        icon: '/icons/icon-icons-128-128.png',
+        badge: '/icons/icon-icons-48-48.png',
+        vibrate: [200, 100, 200],
+        data: {
+            url: '/'
+        }
+    };
+    
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});
+
+// Обработчик клика по уведомлению
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow('/')
     );
 });

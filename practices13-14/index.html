@@ -15,16 +15,24 @@
 </head>
 <body>
     <div class="container">
+        <!-- Кнопки для управления уведомлениями -->
+        <div class="notification-buttons">
+            <button id="enable-push" class="notification-btn enable" title="Включить уведомления">🔔</button>
+            <button id="disable-push" class="notification-btn disable" title="Отключить уведомления" style="display: none;">🔔</button>
+        </div>
         <h1>MY NOTES 𓆩♡𓆪 </h1>
         
-        <div id="status" class="status online">Онлайн</div>
+        <div id="status" class="status online">Online</div>
         
-        <form id="note-form" class="form-row">
-            <input type="text" id="note-input" placeholder="what d u wanna do?" required>
-            <button type="submit">+</button>
-        </form>
+        <nav class="nav-buttons" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button id="home-btn" class="active" style="flex: 1; padding: 10px; border-radius: 8px; cursor: pointer;">Main</button>
+            <button id="about-btn" style="flex: 1; padding: 10px; border-radius: 8px; cursor: pointer;">About</button>
+        </nav>
         
-        <div id="notes-list"></div>
+        <!-- КОНТЕЙНЕР ДЛЯ ДИНАМИЧЕСКОГО КОНТЕНТА-->
+        <div id="app-content">
+            <div class="loading">Loading...</div>
+        </div>
     </div>
 
     <div id="edit-modal" class="modal" style="display: none;">
@@ -40,6 +48,9 @@
             </div>
         </div>
     </div>
+
+        <!-- Socket.IO клиент -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
     <script src="app.js"></script>
 </body>

@@ -331,6 +331,82 @@ h1 {
     background: #b4b4b4;
 }
 
+
+/* ========== КНОПКИ НАВИГАЦИИ ========== */
+.nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.nav-buttons button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.5);
+    color: #474747;
+    backdrop-filter: blur(4px);
+}
+
+.nav-buttons button:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.nav-buttons button.active {
+    background:rgba(255, 255, 255, 0.5);
+    color: #474747;
+    ;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.nav-buttons button.active:hover {
+    transform: translateY(-2px);
+
+}
+
+/*КНОПКИ УВЕДОМЛЕНИЙ */
+.notification-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+}
+
+.notification-btn.enable {
+    color: #4a5568;
+}
+
+.notification-btn.disable {
+    color: #4a5568;
+}
+
+.notification-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.notification-btn:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.2);
+}
+
 /* ========== АДАПТИВНОСТЬ ========== */
 @media (max-width: 480px) {
     .container {
