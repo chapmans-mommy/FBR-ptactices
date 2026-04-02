@@ -1,0 +1,48 @@
+{
+    "name": "Мои заметки",
+    "short_name": "Заметки",
+    "description": "Простое приложение для заметок, работающее офлайн",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#667eea",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "./icons/icon-icons-16-16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-icons-32-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-icons-48-48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-icons-64-64.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-icons-128-128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-icons-256-256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-icons-512-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        }
+    ]
+}
