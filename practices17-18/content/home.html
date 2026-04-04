@@ -1,0 +1,17 @@
+<div class="home-content">
+    <div class="form-divider">Add a note</div>
+    <form id="note-form" class="form-row">
+        <input type="text" id="note-input" placeholder="what do you wanna do?" required>
+        <button type="submit">+</button>
+    </form>
+
+    <div class="form-divider">Add a note with reminder</div>
+
+    <form id="reminder-form" class="form-row" onsubmit="handleReminderSubmit(event)">
+        <input type="text" id="reminder-text" placeholder="Reminder..." required style="flex: 2;">
+        <input type="datetime-local" id="reminder-time" required style="flex: 1;">
+        <button type="submit">+</button>
+    </form>
+
+    <div id="notes-list"></div>
+</div>

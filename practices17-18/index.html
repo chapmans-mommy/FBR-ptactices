@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="./icons/icon-icons-128-128.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="./icons/icon-icons-16-16.png" sizes="16x16" type="image/ico">
+
+    <title>Мои заметки</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Кнопки для управления уведомлениями -->
+        <div class="notification-buttons">
+            <button id="enable-push" class="notification-btn enable" title="Включить уведомления">🔔</button>
+            <button id="disable-push" class="notification-btn disable" title="Отключить уведомления" style="display: none;">🔔</button>
+        </div>
+        <h1>MY NOTES 𓆩♡𓆪 </h1>
+        
+        <div id="status" class="status online">Online</div>
+        
+        <nav class="nav-buttons" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button id="home-btn" class="active" style="flex: 1; padding: 10px; border-radius: 8px; cursor: pointer;">Main</button>
+            <button id="about-btn" style="flex: 1; padding: 10px; border-radius: 8px; cursor: pointer;">About</button>
+        </nav>
+        
+        <!-- КОНТЕЙНЕР ДЛЯ ДИНАМИЧЕСКОГО КОНТЕНТА-->
+        <div id="app-content">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit your note</h3>
+                <button class="close-btn" onclick="closeEditModal()">×</button>
+            </div>
+            <input type="text" id="edit-input" placeholder="Текст заметки">
+            <div class="modal-buttons">
+                <button onclick="saveEdit()">save</button>
+                <button onclick="closeEditModal()">cancel</button>
+            </div>
+        </div>
+    </div>
+
+        <!-- Socket.IO клиент -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <script src="app.js"></script>
+</body>
+</html>
