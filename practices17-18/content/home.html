@@ -2,16 +2,43 @@
     <div class="form-divider">Add a note</div>
     <form id="note-form" class="form-row">
         <input type="text" id="note-input" placeholder="what do you wanna do?" required>
+        <select id="note-tag" class="tag-select">
+            <option value="">no tag</option>
+            <option value="work">Work</option>
+            <option value="university">University</option>
+            <option value="home">Home</option>
+            <option value="shopping">Shopping</option>
+        </select>
         <button type="submit">+</button>
     </form>
 
     <div class="form-divider">Add a note with reminder</div>
 
     <form id="reminder-form" class="form-row" onsubmit="handleReminderSubmit(event)">
-        <input type="text" id="reminder-text" placeholder="Reminder..." required style="flex: 2;">
+        <input type="text" id="reminder-text" placeholder="reminder text" required style="flex: 2;">
         <input type="datetime-local" id="reminder-time" required style="flex: 1;">
+        <select id="note-tag" class="tag-select">
+            <option value="">no tag</option>
+            <option value="work">Work</option>
+            <option value="university">University</option>
+            <option value="home">Home</option>
+            <option value="shopping">Shopping</option>
+        </select>
         <button type="submit">+</button>
     </form>
+
+    <!-- КНОПКА ФИЛЬТРАЦИИ -->
+    <div class="filter-container">
+        <button id="filter-btn" class="filter-btn">🔍︎</button>
+        <div id="filter-dropdown" class="filter-dropdown" style="display: none;">
+            <label><input type="checkbox" value="work">Work</label>
+            <label><input type="checkbox" value="university">University</label>
+            <label><input type="checkbox" value="home">Home</label>
+            <label><input type="checkbox" value="shopping"> Shopping</label>
+            <button id="apply-filter" class="apply-filter-btn">Apply</button>
+            <button id="clear-filter" class="clear-filter-btn">Clear</button>
+        </div>
+    </div>
 
     <div id="notes-list"></div>
 </div>

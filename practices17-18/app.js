@@ -10,6 +10,17 @@ const reminderForm = document.getElementById('reminder-form');
 const reminderText = document.getElementById('reminder-text');
 const reminderTime = document.getElementById('reminder-time');
 
+//ТЕГИ
+const TAGS = {
+    work: { name: 'Work', color: '#4a6fa5' },
+    university: { name: 'University', color: '#9b59b6' },
+    home: { name: 'Home', color: '#e67e22' },
+    shopping: { name: 'Shopping', color: '#2ecc71' }
+};
+
+const TAG_KEYS = ['work', 'university', 'home', 'shopping'];
+let activeFilters = []; // массив выбранных тегов для фильтрации
+
 //localStorage 
 const STORAGE_KEY = 'my_notes';
 let currentEditIndex = null;
@@ -68,16 +79,31 @@ function loadNotes() {
         let reminderInfo = '';
         if (note.reminder) {
             const date = new Date(note.reminder);
-            reminderInfo = `<div class="reminder-badge"> Reminder: ${date.toLocaleString()}</div>`;
+            reminderInfo = `<div class="reminder-badge">Reminder: ${date.toLocaleString()}</div>`;
         }
         
+        // Проверяем фильтрацию
+        if (activeFilters.length > 0 && (!note.tag || !activeFilters.includes(note.tag))) {
+            return ''; // пропускаем заметку, если не подходит под фильтр
+        }
+        
+        // Внутри notesList.innerHTML, перед return, добавь проверку:
+        if (activeFilters.length > 0 && (!note.tag || !activeFilters.includes(note.tag))) {
+            return ''; // пропускаем заметку
+        }
+
         return `
-        <div class="note-item" data-id="${note.id}">
+        <div class="note-item" data-id="${note.id}" data-tag="${note.tag || ''}" style="${activeFilters.length > 0 && (!note.tag || !activeFilters.includes(note.tag)) ? 'display: none;' : ''}">
             <div class="note-header">
                 <div class="mac-buttons">
                     <div class="mac-circle green ${note.color === 'green' ? '' : 'empty'}" data-index="${index}" data-color="green"></div>
                     <div class="mac-circle yellow ${note.color === 'yellow' ? '' : 'empty'}" data-index="${index}" data-color="yellow"></div>
                     <div class="mac-circle red ${note.color === 'red' ? '' : 'empty'}" data-index="${index}" data-color="red"></div>
+                </div>
+                <div class="tag-container">
+                    <div class="tag-badge" data-index="${index}" data-tag="${note.tag || ''}" style="background: ${note.tag ? TAGS[note.tag]?.color : '#aaa'};">
+                        ${note.tag ? TAGS[note.tag]?.name : 'Tag'}
+                    </div>
                 </div>
             </div>
             <div class="note-content">
@@ -92,7 +118,7 @@ function loadNotes() {
             </div>
         </div>
         `;
-    }).join('');
+    }).join('');;
 
     // Обработчики для кружочков
     document.querySelectorAll('.mac-circle').forEach(circle => {
@@ -118,20 +144,35 @@ function loadNotes() {
             deleteNote(index);
         });
     });
+
+    // Обработчики для тегов
+    document.querySelectorAll('.tag-badge').forEach(tagEl => {
+        tagEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(tagEl.dataset.index);
+            openTagMenu(index, tagEl);
+        });
+    });
+    initFilter();
 }
 
-// Сохранение заметки
-function saveNote(text) {
+function saveNote(text, tag) {
     if (!text.trim()) return;
     
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    notes.push({ text: text.trim(), color: null });
+    notes.push({ 
+        text: text.trim(), 
+        color: null, 
+        reminder: null, 
+        tag: tag || null 
+    });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
     loadNotes();
 }
 
+
 // Добавление заметки с напоминанием
-async function addNoteWithReminder(text, reminderTimestamp) {
+async function addNoteWithReminder(text, reminderTimestamp, tag) {
     if (!text.trim()) return;
     
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -139,13 +180,13 @@ async function addNoteWithReminder(text, reminderTimestamp) {
         id: Date.now(), 
         text: text.trim(), 
         color: null,
-        reminder: reminderTimestamp 
+        reminder: reminderTimestamp,
+        tag: tag || null
     };
     notes.push(newNote);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
     loadNotes();
     
-    // Отправляем событие на сервер для планирования push-уведомления
     socket.emit('newReminder', {
         id: newNote.id,
         text: text.trim(),
@@ -165,8 +206,10 @@ function deleteNote(index) {
 function openEditModal(index) {
     const notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     currentEditIndex = index;
-    const noteText = typeof notes[index] === 'string' ? notes[index] : notes[index].text;
+    const note = notes[index];
+    const noteText = typeof note === 'string' ? note : note.text;
     editInput.value = noteText;
+    
     editModal.style.display = 'flex';
 }
 
@@ -183,11 +226,15 @@ function saveEdit() {
         return;
     }
     
+    const tagSelect = document.getElementById('edit-tag');
+    const newTag = tagSelect?.value || null;
+    
     let notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if (typeof notes[currentEditIndex] === 'string') {
-        notes[currentEditIndex] = { text: newText, color: null };
+        notes[currentEditIndex] = { text: newText, color: null, reminder: null, tag: newTag };
     } else {
         notes[currentEditIndex].text = newText;
+        notes[currentEditIndex].tag = newTag;
     }
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
@@ -237,21 +284,19 @@ function initNotes() {
     
     const form = document.getElementById('note-form');
     if (form) {
-        // Удаляем старый обработчик
         const newForm = form.cloneNode(true);
         form.parentNode.replaceChild(newForm, form);
         
         newForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const inputField = document.getElementById('note-input');
+            const tagSelect = document.getElementById('note-tag');
             const text = inputField?.value.trim();
             if (text) {
-                saveNote(text);
-                //ОТПРАВЛЯЕМ СОБЫТИЕ НА СЕРВЕР 
+                saveNote(text, tagSelect?.value || null);
                 socket.emit('newTask', { text: text, timestamp: Date.now() });
-                const inputField = document.getElementById('note-input');
-
                 if (inputField) inputField.value = '';
+                if (tagSelect) tagSelect.value = '';
             }
         });
     }
@@ -265,23 +310,26 @@ function initNotes() {
             e.preventDefault();
             const text = document.getElementById('reminder-text')?.value.trim();
             const datetime = document.getElementById('reminder-time')?.value;
+            const tagSelect = document.getElementById('reminder-tag');
             
             if (text && datetime) {
                 const timestamp = new Date(datetime).getTime();
                 if (timestamp > Date.now()) {
-                    addNoteWithReminder(text, timestamp);
+                    addNoteWithReminder(text, timestamp, tagSelect?.value || null);
                     const textField = document.getElementById('reminder-text');
                     const timeField = document.getElementById('reminder-time');
                     if (textField) textField.value = '';
                     if (timeField) timeField.value = '';
+                    if (tagSelect) tagSelect.value = '';
                 } else {
                     alert('Date should be in the future');
                 }
             } else {
-                alert('fill all the gapes');
+                alert('fill all the gaps');
             }
         });
     }
+    initFilter(); 
 }
 
 //PUSH-УВЕДОМЛЕНИЯ
@@ -479,3 +527,132 @@ window.handleReminderSubmit = function(e) {
         alert('fill all the gaps');
     }
 };
+
+
+// ========== ТЕГИ ==========
+function setNoteTag(index, newTag) {
+    let notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    if (typeof notes[index] === 'string') {
+        notes[index] = { text: notes[index], color: null, reminder: null, tag: newTag || null };
+    } else {
+        notes[index].tag = newTag || null;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    loadNotes();
+}
+
+function openTagMenu(index, tagElement) {
+    const currentTag = tagElement.dataset.tag;
+    const rect = tagElement.getBoundingClientRect();
+    
+    // Удаляем существующее меню
+    const existingMenu = document.querySelector('.tag-menu');
+    if (existingMenu) existingMenu.remove();
+    
+    const menu = document.createElement('div');
+    menu.className = 'tag-menu';
+    menu.style.cssText = `
+        position: fixed;
+        top: ${rect.bottom + 5}px;
+        left: ${rect.left}px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 1000;
+        min-width: 150px;
+        overflow: hidden;
+    `;
+    
+    // Опция "Без тега"
+    const noTagOption = document.createElement('div');
+    noTagOption.className = 'tag-menu-item';
+    noTagOption.innerHTML = 'No tag';
+    noTagOption.style.cssText = 'padding: 10px 16px; cursor: pointer; transition: background 0.2s;';
+    noTagOption.onmouseover = () => noTagOption.style.background = '#f0f0f0';
+    noTagOption.onmouseout = () => noTagOption.style.background = 'white';
+    noTagOption.onclick = () => {
+        setNoteTag(index, null);
+        menu.remove();
+    };
+    menu.appendChild(noTagOption);
+    
+    // Опции для каждого тега
+    TAG_KEYS.forEach(tagKey => {
+        const tag = TAGS[tagKey];
+        const option = document.createElement('div');
+        option.className = 'tag-menu-item';
+        option.innerHTML = `${tag.name}`;
+        option.style.cssText = `padding: 10px 16px; cursor: pointer; transition: background 0.2s; border-left: 4px solid ${tag.color};`;
+        option.onmouseover = () => option.style.background = '#f0f0f0';
+        option.onmouseout = () => option.style.background = 'white';
+        option.onclick = () => {
+            setNoteTag(index, tagKey);
+            menu.remove();
+        };
+        menu.appendChild(option);
+    });
+    
+    document.body.appendChild(menu);
+    
+    // Закрыть при клике вне меню
+    setTimeout(() => {
+        document.addEventListener('click', function closeMenu(e) {
+            if (!menu.contains(e.target) && e.target !== tagElement) {
+                menu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        });
+    }, 0);
+}
+
+// ========== ФИЛЬТРАЦИЯ ==========
+// ========== ФИЛЬТРАЦИЯ ==========
+function initFilter() {
+    const filterBtn = document.getElementById('filter-btn');
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const applyBtn = document.getElementById('apply-filter');
+    const clearBtn = document.getElementById('clear-filter');
+    
+    if (!filterBtn) return;
+    
+    // Удаляем старые обработчики, чтобы не было дублирования
+    const newFilterBtn = filterBtn.cloneNode(true);
+    filterBtn.parentNode.replaceChild(newFilterBtn, filterBtn);
+    
+    newFilterBtn.addEventListener('click', () => {
+        const dropdown = document.getElementById('filter-dropdown');
+        if (dropdown) {
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+    });
+    
+    if (applyBtn) {
+        const newApplyBtn = applyBtn.cloneNode(true);
+        applyBtn.parentNode.replaceChild(newApplyBtn, applyBtn);
+        
+        newApplyBtn.addEventListener('click', () => {
+            const dropdown = document.getElementById('filter-dropdown');
+            const checkboxes = dropdown?.querySelectorAll('input[type="checkbox"]');
+            activeFilters = [];
+            checkboxes?.forEach(cb => {
+                if (cb.checked) activeFilters.push(cb.value);
+            });
+            if (dropdown) dropdown.style.display = 'none';
+            loadNotes(); // перерисовываем с фильтром
+        });
+    }
+    
+    if (clearBtn) {
+        const newClearBtn = clearBtn.cloneNode(true);
+        clearBtn.parentNode.replaceChild(newClearBtn, clearBtn);
+        
+        newClearBtn.addEventListener('click', () => {
+            const dropdown = document.getElementById('filter-dropdown');
+            const checkboxes = dropdown?.querySelectorAll('input[type="checkbox"]');
+            checkboxes?.forEach(cb => cb.checked = false);
+            activeFilters = [];
+            if (dropdown) dropdown.style.display = 'none';
+            loadNotes();
+        });
+    }
+}
