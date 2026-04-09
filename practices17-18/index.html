@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- <button id="theme-toggle" class="theme-toggle" title="Тёмная тема">🌙</button> -->
     <div class="container">
         <!-- Кнопки для управления уведомлениями -->
         <div class="notification-buttons">
-            <button id="enable-push" class="notification-btn enable" title="Включить уведомления">🔔</button>
-            <button id="disable-push" class="notification-btn disable" title="Отключить уведомления" style="display: none;">🔔</button>
+            <button id="settings-btn" class="settings-btn" title="Настройки">☰</button>
+            <!-- <button id="enable-push" class="notification-btn enable" title="Включить уведомления">🔔</button>
+            <button id="disable-push" class="notification-btn disable" title="Отключить уведомления" style="display: none;">🔔</button> -->
         </div>
         <h1>MY NOTES 𓆩♡𓆪 </h1>
         
@@ -45,6 +47,41 @@
             <div class="modal-buttons">
                 <button onclick="saveEdit()">save</button>
                 <button onclick="closeEditModal()">cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settings-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>Settings</h3>
+                <button class="settings-close-btn" onclick="closeSettingsModal()">×</button>
+            </div>
+            <div class="settings-modal-body">
+                <!-- Уведомления -->
+                <div class="settings-item">
+                    <label class="settings-label">Notifications</label>
+                    <div class="settings-toggle-wrapper">
+                        <!-- <span class="settings-status" id="notifications-status">Выключены</span> -->
+                        <label class="switch">
+                            <input type="checkbox" id="notifications-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Тёмная тема -->
+                <div class="settings-item">
+                    <label class="settings-label">Dark theme</label>
+                    <div class="settings-toggle-wrapper">
+                        <!-- <span class="settings-status" id="theme-status">Выключена</span> -->
+                        <label class="switch">
+                            <input type="checkbox" id="theme-toggle-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

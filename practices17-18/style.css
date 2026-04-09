@@ -634,6 +634,480 @@ h1 {
 
 
 
+/* ========== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ========== */
+.theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+}
+
+/* ========== ТЁМНАЯ ТЕМА ========== */
+body.dark-theme {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+body.dark-theme .container {
+    background: rgba(30, 30, 46, 0.9);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme h1 {
+    color: #e0d4ff;
+}
+
+body.dark-theme .note-item {
+    background: rgba(50, 50, 70, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .note-text {
+    color: #d1d1e0;
+}
+
+body.dark-theme .note-text-wrapper {
+    color: #d1d1e0;
+}
+
+body.dark-theme #note-input,
+body.dark-theme #reminder-text,
+body.dark-theme #reminder-time {
+    background: rgba(30, 30, 46, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e0d4ff;
+}
+
+body.dark-theme #note-input::placeholder,
+body.dark-theme #reminder-text::placeholder {
+    color: #888;
+}
+
+body.dark-theme #note-form button,
+body.dark-theme #reminder-form button {
+    background: rgba(60, 60, 80, 0.9);
+    color: #e0d4ff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme #note-form button:hover,
+body.dark-theme #reminder-form button:hover {
+    background: rgba(80, 80, 100, 0.9);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .tag-select {
+    background: rgba(30, 30, 46, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e0d4ff;
+}
+
+body.dark-theme .tag-select option {
+    background: #1e1e2e;
+    color: #e0d4ff;
+}
+
+body.dark-theme .filter-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0d4ff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .filter-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .filter-dropdown {
+    background: #1e1e2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .filter-dropdown label {
+    color: #e0d4ff;
+}
+
+body.dark-theme .apply-filter-btn {
+    background: linear-gradient(135deg, #8999df 0%, #776886 100%);
+    color: white;
+}
+
+body.dark-theme .clear-filter-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0d4ff;
+}
+
+body.dark-theme .status.online {
+    background: rgba(40, 167, 69, 0.2);
+    color: #6fcf97;
+}
+
+body.dark-theme .status.offline {
+    background: rgba(220, 53, 69, 0.2);
+    color: #ff6b6b;
+}
+
+body.dark-theme .reminder-badge {
+    background: rgba(255, 152, 0, 0.15);
+    color: #ffb347;
+}
+
+body.dark-theme .empty-message {
+    background: rgba(50, 50, 70, 0.5);
+    color: #aaa;
+}
+
+body.dark-theme .tag-badge {
+    opacity: 0.8;
+}
+
+body.dark-theme .tag-badge:hover {
+    opacity: 1;
+}
+
+body.dark-theme .modal-content {
+    background: #1e1e2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .modal-header h3 {
+    color: #e0d4ff;
+}
+
+body.dark-theme .close-btn {
+    color: #aaa;
+}
+
+body.dark-theme .close-btn:hover {
+    color: #e0d4ff;
+}
+
+body.dark-theme #edit-input {
+    background: rgba(30, 30, 46, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e0d4ff;
+}
+
+body.dark-theme .modal-buttons button:first-child {
+    background: linear-gradient(135deg, #8999df 0%, #776886 100%);
+    color: white;
+}
+
+body.dark-theme .modal-buttons button:last-child {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0d4ff;
+}
+
+body.dark-theme .modal-buttons button:last-child:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .tag-menu {
+    background: #1e1e2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .tag-menu-item {
+    color: #e0d4ff;
+}
+
+body.dark-theme .tag-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Градиенты в тёмной теме остаются сиреневыми */
+body.dark-theme .edit-btn {
+    background: linear-gradient(135deg, #8999df 0%, #776886 100%);
+}
+
+body.dark-theme .edit-btn:hover {
+    background: linear-gradient(135deg, #8999df 0%, #776886 100%);
+}
+
+body.dark-theme .notification-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0d4ff;
+}
+
+body.dark-theme .notification-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0d4ff;
+}
+
+body.dark-theme .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .nav-buttons button {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e0d4ff;
+}
+
+body.dark-theme .nav-buttons button.active {
+    background: rgba(100, 80, 200, 0.3);
+    color: #c4b5fd;
+}
+
+
+
+/* ========== КНОПКА НАСТРОЕК ========== */
+.settings-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.281);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    font-size: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+}
+
+.settings-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== МОДАЛЬНОЕ ОКНО НАСТРОЕК ========== */
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.settings-modal-content {
+    background: white;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.2s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.settings-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.settings-modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: 0.15dvh;
+    color: #333;
+}
+
+.settings-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+    width: auto;
+    padding: 0 8px;
+}
+
+.settings-close-btn:hover {
+    color: #333;
+    background: none;
+    transform: none;
+}
+
+.settings-modal-body {
+    padding: 24px;
+}
+
+.settings-item {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.settings-label {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+    letter-spacing: 0.17dvh;
+    margin-bottom: 12px;
+}
+
+.settings-toggle-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+
+/* ========== ТЁМНАЯ ТЕМА ДЛЯ МОДАЛЬНОГО ОКНА ========== */
+body.dark-theme .settings-modal-content {
+    background: #1e1e2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .settings-modal-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .settings-modal-header h3 {
+    color: #e0d4ff;
+}
+
+body.dark-theme .settings-close-btn {
+    color: #aaa;
+}
+
+body.dark-theme .settings-close-btn:hover {
+    color: #e0d4ff;
+}
+
+body.dark-theme .settings-item {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-theme .settings-label {
+    color: #e0d4ff;
+}
+
+body.dark-theme .settings-status {
+    background: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+}
+
+body.dark-theme .settings-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(101, 101, 101, 0.281);
+    background: rgba(107, 107, 107, 0.15);
+    backdrop-filter: blur(4px);
+    font-size: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666b74;
+}
+
+
+/* ========== ПЕРЕКЛЮЧАТЕЛИ (TOGGLE SWITCH) ========== */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(135deg, #8999df 0%, #776886 100%);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Тёмная тема для переключателей */
+body.dark-theme .slider {
+    background-color: #555;
+}
+
+body.dark-theme .slider:before {
+    background-color: #e0d4ff;
+}
+
+body.dark-theme input:checked + .slider {
+    background: linear-gradient(135deg, #8999df 0%, #776886 100%);
+}
+
+
+
 /* ========== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ ========== */
 @media (max-width: 480px) {
     #reminder-form {

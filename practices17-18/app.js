@@ -10,6 +10,17 @@ const reminderForm = document.getElementById('reminder-form');
 const reminderText = document.getElementById('reminder-text');
 const reminderTime = document.getElementById('reminder-time');
 
+const settingsBtn = document.getElementById('settings-btn');
+const settingsModal = document.getElementById('settings-modal');
+const settingsEnableBtn = document.getElementById('settings-enable-push');
+const settingsDisableBtn = document.getElementById('settings-disable-push');
+const notificationsStatus = document.getElementById('notifications-status');
+const settingsLightTheme = document.getElementById('settings-light-theme');
+const settingsDarkTheme = document.getElementById('settings-dark-theme');
+const themeStatus = document.getElementById('theme-status');
+
+window.closeSettingsModal = window.closeSettingsModal || function() {};
+
 //ТЕГИ
 const TAGS = {
     work: { name: 'Work', color: '#4a6fa5' },
@@ -488,6 +499,165 @@ socket.on('reminderSnoozed', (data) => {
     setTimeout(() => notification.remove(), 3000);
 });
 
+
+// ========== НАСТРОЙКИ (МОДАЛЬНОЕ ОКНО) ==========
+// Открыть окно настроек
+function openSettingsModal() {
+    settingsModal.style.display = 'flex';
+    // Обновляем статусы
+    updateSettingsStatus();
+}
+
+// Закрыть окно настроек
+window.closeSettingsModal = function() {
+    const modal = document.getElementById('settings-modal');
+    if (modal) modal.style.display = 'none';
+};
+
+// ========== НАСТРОЙКИ (ПЕРЕКЛЮЧАТЕЛИ) ==========
+const notificationsToggle = document.getElementById('notifications-toggle');
+const themeToggleSwitch = document.getElementById('theme-toggle-switch');
+const notificationsStatusSpan = document.getElementById('notifications-status');
+const themeStatusSpan = document.getElementById('theme-status');
+
+// Обновление UI
+function updateSettingsUI() {
+    // Уведомления
+    const isSubscribed = localStorage.getItem('pushSubscribed') === 'true';
+    if (notificationsToggle) notificationsToggle.checked = isSubscribed;
+    if (notificationsStatusSpan) {
+        notificationsStatusSpan.textContent = isSubscribed ? 'on' : 'off';
+    }
+    
+    // Тёмная тема
+    const isDark = document.body.classList.contains('dark-theme');
+    if (themeToggleSwitch) themeToggleSwitch.checked = isDark;
+    if (themeStatusSpan) {
+        themeStatusSpan.textContent = isDark ? 'Тёмная' : 'Светлая';
+    }
+    
+    // Обновляем основные кнопки уведомлений
+    const enableBtn = document.getElementById('enable-push');
+    const disableBtn = document.getElementById('disable-push');
+    if (enableBtn && disableBtn) {
+        if (isSubscribed) {
+            enableBtn.style.display = 'none';
+            disableBtn.style.display = 'inline-block';
+        } else {
+            enableBtn.style.display = 'inline-block';
+            disableBtn.style.display = 'none';
+        }
+    }
+    
+    // Обновляем иконку темы
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+        themeToggle.title = isDark ? 'Светлая тема' : 'Тёмная тема';
+    }
+}
+
+// Переключатель уведомлений
+if (notificationsToggle) {
+    notificationsToggle.addEventListener('change', async (e) => {
+        if (e.target.checked) {
+            // Включаем уведомления
+            if (Notification.permission === 'denied') {
+                alert('Уведомления запрещены. Разрешите их в настройках браузера.');
+                e.target.checked = false;
+                return;
+            }
+            if (Notification.permission === 'default') {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    alert('Необходимо разрешить уведомления.');
+                    e.target.checked = false;
+                    return;
+                }
+            }
+            await subscribeToPush();
+            localStorage.setItem('pushSubscribed', 'true');
+        } else {
+            // Выключаем уведомления
+            await unsubscribeFromPush();
+            localStorage.setItem('pushSubscribed', 'false');
+        }
+        updateSettingsUI();
+    });
+}
+
+// Переключатель тёмной темы
+if (themeToggleSwitch) {
+    themeToggleSwitch.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+        }
+        updateSettingsUI();
+    });
+}
+
+// Открыть окно настроек
+window.openSettingsModal = function() {
+    if (settingsModal) {
+        settingsModal.style.display = 'flex';
+        updateSettingsUI();
+    }
+};
+
+// Закрыть окно настроек
+window.closeSettingsModal = function() {
+    if (settingsModal) {
+        settingsModal.style.display = 'none';
+    }
+};
+
+// Открытие по кнопке
+if (settingsBtn) {
+    settingsBtn.addEventListener('click', window.openSettingsModal);
+}
+
+// Закрытие по клику вне окна
+if (settingsModal) {
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            window.closeSettingsModal();
+        }
+    });
+}
+
+// Закрытие по Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && settingsModal && settingsModal.style.display === 'flex') {
+        window.closeSettingsModal();
+    }
+});
+
+// Инициализация UI при загрузке
+updateSettingsUI();
+
+// Открытие окна настроек по кнопке
+if (settingsBtn) {
+    settingsBtn.addEventListener('click', openSettingsModal);
+}
+
+// Обновляем статус подписки при загрузке
+const savedSubscription = localStorage.getItem('pushSubscribed');
+if (savedSubscription === 'true') {
+    // Проверяем, есть ли реальная подписка
+    navigator.serviceWorker.ready.then(reg => {
+        reg.pushManager.getSubscription().then(sub => {
+            if (!sub) {
+                localStorage.setItem('pushSubscribed', 'false');
+            }
+        });
+    });
+}
+
+
 //SERVICE WORKER
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
@@ -656,3 +826,13 @@ function initFilter() {
         });
     }
 }
+
+window.closeSettingsModal = function() {
+    const modal = document.getElementById('settings-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        console.log('Модальное окно закрыто');
+    } else {
+        console.log('Модальное окно не найдено');
+    }
+};
