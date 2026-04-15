@@ -1,6 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-// ⚠️ ВАЖНО: замените 'ваш_пароль' на реальный пароль от PostgreSQL
 const sequelize = new Sequelize('user_api', 'postgres', 'root', {
     host: 'localhost',
     dialect: 'postgres',
