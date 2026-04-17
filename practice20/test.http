@@ -1,0 +1,26 @@
+### Создание пользователя
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "first_name": "Иван",
+    "last_name": "3",
+    "age": 25
+}
+
+### Получение всех пользователей
+GET http://localhost:3001/api/users
+
+### Получение пользователя по ID (замените на реальный ID из ответа выше)
+GET http://localhost:3001/api/users/69e1ebf58403e5578df1b67d
+
+### Обновление пользователя
+PATCH http://localhost:3001/api/users/69e1ebf58403e5578df1b67d
+Content-Type: application/json
+
+{
+    "age": 199
+}
+
+### Удаление пользователя
+DELETE http://localhost:3001/api/users/69e1e833dc8d6fae1c544617
