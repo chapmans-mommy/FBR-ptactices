@@ -11,8 +11,8 @@ app.use(express.json());
 const uri = 'mongodb://YourMongoAdmin:1234@localhost:27017/userdb?authSource=admin';
 
 mongoose.connect(uri)
-    .then(() => console.log('✅ Connected to MongoDB'))
-    .catch(err => console.error('❌ MongoDB error:', err.message));
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB error:', err.message));
 
 // Схема и модель
 const userSchema = new mongoose.Schema({
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// ========== МАРШРУТЫ ==========
+// МАРШРУТЫ
 
 // POST /api/users - создать
 app.post('/api/users', async (req, res) => {
@@ -107,5 +107,5 @@ app.delete('/api/users/:id', async (req, res) => {
 
 // Запуск
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
