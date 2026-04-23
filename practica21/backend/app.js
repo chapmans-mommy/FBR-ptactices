@@ -11,13 +11,13 @@ const swaggerUi = require('swagger-ui-express');
 const app = express();
 const port = 3000;
 
-// ========== НАСТРОЙКИ JWT ==========
+// НАСТРОЙКИ JWT
 const ACCESS_SECRET = 'access-secret-key-change-this';
 const REFRESH_SECRET = 'refresh-secret-key-change-this';
 const ACCESS_EXPIRES_IN = '15m';
 const REFRESH_EXPIRES_IN = '7d';
 
-// ========== НАСТРОЙКИ КЭША ==========
+//НАСТРОЙКИ КЭША 
 const USERS_CACHE_TTL = 60;      // 1 минута для списка пользователей
 const PRODUCTS_CACHE_TTL = 600;  // 10 минут для товаров
 
@@ -32,7 +32,7 @@ const redisClient = createClient({
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error:', err));
-redisClient.on('connect', () => console.log('✅ Connected to Redis'));
+redisClient.on('connect', () => console.log('Connected to Redis'));
 
 // Функция инициализации Redis
 async function initRedis() {
@@ -76,7 +76,7 @@ function findProductOr404(id, res) {
     return product;
 }
 
-// ========== ФУНКЦИИ ДЛЯ РАБОТЫ С КЭШЕМ ==========
+//ФУНКЦИИ ДЛЯ РАБОТЫ С КЭШЕМ 
 
 // Middleware для чтения из кэша
 function cacheMiddleware(keyBuilder, ttl) {
@@ -140,8 +140,9 @@ async function invalidateProductsCache(productId = null) {
     }
 }
 
-// ========== ФУНКЦИИ ГЕНЕРАЦИИ ТОКЕНОВ ==========
 
+
+//ФУНКЦИИ ГЕНЕРАЦИИ ТОКЕНОВ
 function generateAccessToken(user) {
     return jwt.sign(
         {
@@ -164,8 +165,7 @@ function generateRefreshToken(user) {
     );
 }
 
-// ========== MIDDLEWARE ==========
-
+//MIDDLEWARE
 function authMiddleware(req, res, next) {
     const header = req.headers.authorization || "";
     const [scheme, token] = header.split(" ");
@@ -203,7 +203,7 @@ function roleMiddleware(allowedRoles) {
     };
 }
 
-// ========== SWAGGER ==========
+//SWAGGER
 
 const swaggerOptions = {
     definition: {
@@ -211,7 +211,7 @@ const swaggerOptions = {
         info: {
             title: 'API с ролевой моделью (RBAC) + Redis Cache',
             version: '1.0.0',
-            description: 'Практическое занятие №21 — кэширование с Redis',
+            description: 'Практическое занятие №21(due №11) — кэширование с Redis',
         },
         servers: [{ url: `http://localhost:${port}`, description: 'Локальный сервер' }],
         components: {
@@ -259,7 +259,7 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ========== ПУБЛИЧНЫЕ МАРШРУТЫ ==========
+//ПУБЛИЧНЫЕ МАРШРУТЫ 
 
 /**
  * @swagger
@@ -524,7 +524,7 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
     });
 });
 
-// ========== УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ (С КЭШИРОВАНИЕМ) ==========
+//УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ (С КЭШИРОВАНИЕМ)
 
 /**
  * @swagger
@@ -731,7 +731,7 @@ app.delete('/api/users/:id', authMiddleware, roleMiddleware(['admin']), async (r
     res.status(204).send();
 });
 
-// ========== УПРАВЛЕНИЕ ТОВАРАМИ (С КЭШИРОВАНИЕМ) ==========
+//УПРАВЛЕНИЕ ТОВАРАМИ (С КЭШИРОВАНИЕМ) 
 
 /**
  * @swagger
@@ -962,7 +962,7 @@ app.delete('/api/products/:id', authMiddleware, roleMiddleware(['admin']), async
     res.status(204).send();
 });
 
-// ========== ЗАПУСК СЕРВЕРА ==========
+//ЗАПУСК СЕРВЕРА
 
 async function startServer() {
     await initRedis();
