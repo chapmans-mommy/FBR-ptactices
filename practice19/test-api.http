@@ -1,0 +1,39 @@
+### Создать пользователя
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "first_name": "Иван",
+    "last_name": "Петров",
+    "age": 25
+}
+
+### Создать второго пользователя
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "first_name": "Мария",
+    "last_name": "Иванова",
+    "age": 30
+}
+
+### Получить всех пользователей
+GET http://localhost:3000/api/users
+
+### Получить пользователя с ID=1
+GET http://localhost:3000/api/users/1
+
+### Обновить пользователя (изменить возраст)
+PATCH http://localhost:3000/api/users/5
+Content-Type: application/json
+
+{
+    "age": 26
+}
+
+### Удалить пользователя с ID=2
+DELETE http://localhost:3000/api/users/7
+
+### Проверить, что пользователь удалён
+GET http://localhost:3000/api/users
