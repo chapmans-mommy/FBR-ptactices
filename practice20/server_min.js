@@ -10,6 +10,8 @@ app.use(express.json());
 
 // подключение к MongoDB
 const uri = 'mongodb://YourMongoAdmin:1234@localhost:27017/userdb?authSource=admin';
+//// Стандартная строка подключения к MongoDB Atlas
+//const uri = "mongodb+srv://YourMongoAdmin:1234@cluster0.abcde.mongodb.net/userdb?retryWrites=true&w=majority";
 
 mongoose.connect(uri)
     .then(() => console.log('Connected to MongoDB')) //корректное подключение - сообщение

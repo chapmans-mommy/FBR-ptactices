@@ -7,7 +7,9 @@ const PORT = 3000;
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); //позволяет передавать вложенные объекты и массивы в данных формы
+                                                 //только простые строки и числа
+
 
 // Маршруты
 app.use('/api/users', userRoutes);
