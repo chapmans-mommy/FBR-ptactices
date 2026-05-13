@@ -2,10 +2,10 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 
-// ✅ Ленивая загрузка компонента About
+//Ленивая загрузка компонента About
 const About = lazy(() => import('./pages/About'));
 
-// ❌ Обычный импорт (без lazy loading) для главной страницы
+//Обычный импорт для главной страницы
 import Home from './pages/Home';
 
 function App() {
@@ -24,8 +24,7 @@ function App() {
           <Route 
             path="/about" 
             element={
-              // Suspense показывает загрузку, пока компонент подгружается
-              <Suspense fallback={<div>⏳ Загрузка страницы...</div>}>
+              <Suspense fallback={<div>Загрузка страницы...</div>}>
                 <About />
               </Suspense>
             } 

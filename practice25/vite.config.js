@@ -7,9 +7,9 @@ export default defineConfig({
     react(),
     visualizer({
       filename: 'bundle-report.html',
-      open: false,        // ← измените false, чтобы не открывался автоматически
+      open: false,       
       gzipSize: true,
-      template: 'treemap', // ← добавьте шаблон
+      template: 'treemap', 
     }),
   ],
 });
